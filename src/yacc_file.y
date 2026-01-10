@@ -73,6 +73,7 @@
  * =============================== */
 %type<str> source
 %type<str> assign_lhs
+%type<num> variable_list;
 
 %%
 
@@ -167,13 +168,21 @@ arithmetic_op:
     ;
 
 init_live_set:
-    OSB variable_list CSB
+    OSB variable_list CSB {
+            // You can assume there might be at least 1 variable and at most 5 
+            //      live variables in this list.
+            if ($2 < 1 || $2 > 5) { 
+                fprintf(stderr,
+                        "Error: init_live_set must contain between 1 and 5 variables\n");
+                YYERROR;   // call parse error
+            }
+        }
     ;
 
 variable_list:
-    VARIABLE { g_liveSet.push_new_var(string($1)); } COMMA variable_list  
+    variable_list COMMA VARIABLE { g_liveSet.push_new_var(string($3)); $$ = $1 + 1; }
     |
-    VARIABLE { g_liveSet.push_new_var(string($1)); }
+    VARIABLE { g_liveSet.push_new_var(string($1)); $$ = 1; }
     ;
 
 %%
