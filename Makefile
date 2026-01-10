@@ -1,5 +1,5 @@
 SRC     	:= src
-BUILD   	:= build
+BUILD   	:= ./build
 TARGET  	:= dead
 INC     	:= inc
 
@@ -14,8 +14,10 @@ CXXFLAGS 	+= -Wno-sign-compare -Wno-unused-variable -Wno-unused-function
 LEX     	:= flex
 YACC    	:= /opt/homebrew/opt/bison/bin/bison
 
+INPUT_FILE	:= input.txt
+
 # ========================
-# Kaynaklar
+# Sources
 # ========================
 
 SRC_CPP := $(wildcard $(SRC)/*.cpp)
@@ -72,7 +74,14 @@ $(LEX_O): $(LEX_C)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # ========================
-# Temizlik
+# Run
+# ========================
+
+run: $(BUILD) $(TARGET)
+	tail -r $(INPUT_FILE) | $(BUILD)/$(TARGET) | tail -r
+
+# ========================
+# Clean
 # ========================
 
 clean:

@@ -168,8 +168,6 @@ arithmetic_op:
 
 init_live_set:
     OSB variable_list CSB
-    |
-    OSB CSB
     ;
 
 variable_list:
